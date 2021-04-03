@@ -2,7 +2,6 @@ package graph
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"math"
 	"os"
@@ -49,17 +48,17 @@ func Search(A string, B string, nodes []Info) (int, int) {
 
 // Atribut Struktur data pair
 type Info struct {
-	x    float64
-	y    float64
-	name string
+	latitude  float64
+	longitude float64
+	name      string
 }
 
 // Getter
-func (info Info) GetX() float64 {
-	return info.x
+func (info Info) GetLatitude() float64 {
+	return info.latitude
 }
-func (info Info) GetY() float64 {
-	return info.y
+func (info Info) GetLongitude() float64 {
+	return info.longitude
 }
 func (info Info) GetName() string {
 	return info.name
@@ -78,22 +77,22 @@ func degreesToRadians(d float64) float64 {
 }
 func GetEuclidanDistance(A Info, B Info) float64 {
 	// Coordinate A in radians
-	longitude1 := degreesToRadians(A.x)
-	latitude1 := degreesToRadians(A.y)
+	latitude1 := degreesToRadians(A.latitude)
+	longitude1 := degreesToRadians(A.longitude)
+
 	// Coordinate B in radians
-	longitude2 := degreesToRadians(B.x)
-	latitude2 := degreesToRadians(B.y)
+	latitude2 := degreesToRadians(B.latitude)
+	longitude2 := degreesToRadians(B.longitude)
 
 	// Haversine Formula
 	differencelongitude := longitude2 - longitude1
 	differencelatitude := latitude2 - latitude1
 
-	a := math.Pow(math.Sin(differencelatitude/2), 2) + math.Cos(latitude1)*math.Cos(latitude2)*
-		math.Pow(math.Sin(differencelongitude/2), 2)
+	a := math.Pow(math.Sin(differencelatitude/2), 2) + math.Cos(latitude1)*math.Cos(latitude2)*math.Pow(math.Sin(differencelongitude/2), 2)
 
 	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
 
-	// earth radius
+	// earth radius in KM
 	km := c * 6371
 	return km
 }
@@ -119,9 +118,9 @@ func ReadFile(fileName string) *Graph {
 		for j := 1; j < len(line)-2; j++ {
 			simpang = simpang + " " + line[j]
 		}
-		x, _ := strconv.ParseFloat(line[len(line)-2], 64)
-		y, _ := strconv.ParseFloat(line[len(line)-1], 64)
-		graf.nodes[i] = Info{x, y, simpang}
+		latitude, _ := strconv.ParseFloat(line[len(line)-2], 64)
+		longitude, _ := strconv.ParseFloat(line[len(line)-1], 64)
+		graf.nodes[i] = Info{latitude, longitude, simpang}
 	}
 
 	// Read & Split adjacency matrix
@@ -137,10 +136,8 @@ func ReadFile(fileName string) *Graph {
 				a := graf.nodes[i]
 				b := graf.nodes[j]
 				graf.adjacencyMatrix[i][j] = GetEuclidanDistance(a, b)
-				fmt.Println(graf.adjacencyMatrix[i][j])
 			}
 		}
 	}
-
 	return graf
 }
