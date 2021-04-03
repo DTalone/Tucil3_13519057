@@ -28,7 +28,7 @@ func main() {
 		fmt.Print("Masukkan Nama Posisi Tujuan : ")
 		var goal string
 		fmt.Scanln(&goal)
-		fmt.Println(graf.Astar("Ciungwanara-Ganesa", "Ciungwanara-Gelap Nyawang"))
+		fmt.Println(graf.Astar(start, goal))
 	}
 	//--------------------------------------
 }

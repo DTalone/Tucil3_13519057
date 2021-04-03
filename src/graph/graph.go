@@ -231,11 +231,14 @@ func (graf *Graph) Astar(A string, B string) float64 {
 		a = a % 10
 		for i := 0; i < graf.totalNodes; i++ {
 			if graf.adjacencyMatrix[a][i] > 0 && !isVisited(now.visited, i) {
+				updategn := now.gn + graf.adjacencyMatrix[a][i]
+				updatehn := graf.GetDistance(graf.nodes[i].name, now.goal)
+				updatefn := updategn + updatehn
 				item := &Item{
 					current: graf.nodes[i].name,
 					goal:    now.goal,
-					gn:      now.gn + graf.adjacencyMatrix[a][i],
-					fn:      graf.GetDistance(graf.nodes[i].name, now.goal),
+					gn:      updategn,
+					fn:      updatefn,
 					visited: now.visited + strconv.Itoa(i),
 				}
 				heap.Push(&pq, item)
