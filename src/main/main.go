@@ -12,7 +12,9 @@ func main() {
 	fmt.Print("Masukkan nama  file : ")
 	var fileName string
 	fmt.Scanln(&fileName)
-	graf := new(graph.Graph)
-	graf = graph.ReadFile(fileName)
-	//fmt.Println(graf.GetTotalNodes())
+	graf := graph.ReadFile(fileName)
+	nodes := graf.GetNodes()
+	for k, v := range nodes {
+		fmt.Println(k, v)
+	}
 }

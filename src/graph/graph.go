@@ -24,6 +24,9 @@ func (graf *Graph) GetTotalNodes() int {
 func (graf *Graph) GetDistance(A string, B string) float64 {
 	return graf.adjacencyMatrix[A][B]
 }
+func (graf *Graph) GetNodes() map[string]Pair {
+	return graf.nodes
+}
 
 // STRUKTUR DATA PAIR
 
