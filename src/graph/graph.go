@@ -2,7 +2,9 @@ package graph
 
 import (
 	"bufio"
+	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -12,9 +14,9 @@ import (
 
 // Atribut Struktur data Graph
 type Graph struct {
-	adjacencyMatrix map[string]map[string]float64
+	adjacencyMatrix [][]float64
 	totalNodes      int
-	nodes           map[string]Pair
+	nodes           []Info
 }
 
 // Getter
@@ -22,26 +24,45 @@ func (graf *Graph) GetTotalNodes() int {
 	return graf.totalNodes
 }
 func (graf *Graph) GetDistance(A string, B string) float64 {
-	return graf.adjacencyMatrix[A][B]
+	idx1, idx2 := Search(A, B, graf.nodes)
+	return graf.adjacencyMatrix[idx1][idx2]
 }
-func (graf *Graph) GetNodes() map[string]Pair {
+func (graf *Graph) GetNodes() []Info {
 	return graf.nodes
+}
+
+func Search(A string, B string, nodes []Info) (int, int) {
+	idx1 := -1
+	idx2 := -1
+	for i := 0; i < len(nodes); i++ {
+		if nodes[i].name == A {
+			idx1 = i
+		}
+		if nodes[i].name == A {
+			idx2 = i
+		}
+	}
+	return idx1, idx2
 }
 
 // STRUKTUR DATA PAIR
 
 // Atribut Struktur data pair
-type Pair struct {
-	x float64
-	y float64
+type Info struct {
+	x    float64
+	y    float64
+	name string
 }
 
 // Getter
-func (pair Pair) GetX() float64 {
-	return pair.x
+func (info Info) GetX() float64 {
+	return info.x
 }
-func (pair Pair) GetY() float64 {
-	return pair.y
+func (info Info) GetY() float64 {
+	return info.y
+}
+func (info Info) GetName() string {
+	return info.name
 }
 
 // Error classification
@@ -49,6 +70,32 @@ func Check(fileName string, e error) {
 	if e != nil {
 		log.Fatalf(fileName + ": The system cannot find the file specified.")
 	}
+}
+
+// Euclidan Distance
+func degreesToRadians(d float64) float64 {
+	return d * math.Pi / 180
+}
+func GetEuclidanDistance(A Info, B Info) float64 {
+	// Coordinate A in radians
+	longitude1 := degreesToRadians(A.x)
+	latitude1 := degreesToRadians(A.y)
+	// Coordinate B in radians
+	longitude2 := degreesToRadians(B.x)
+	latitude2 := degreesToRadians(B.y)
+
+	// Haversine Formula
+	differencelongitude := longitude2 - longitude1
+	differencelatitude := latitude2 - latitude1
+
+	a := math.Pow(math.Sin(differencelatitude/2), 2) + math.Cos(latitude1)*math.Cos(latitude2)*
+		math.Pow(math.Sin(differencelongitude/2), 2)
+
+	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+
+	// earth radius
+	km := c * 6371
+	return km
 }
 
 // Read External File
@@ -64,7 +111,7 @@ func ReadFile(fileName string) *Graph {
 	n, _ := strconv.Atoi(scanner.Text())
 	graf.totalNodes = n
 	// read detail nodes
-	graf.nodes = make(map[string]Pair)
+	graf.nodes = make([]Info, n)
 	for i := 0; i < n; i++ {
 		scanner.Scan()
 		line := strings.Fields(scanner.Text())
@@ -74,25 +121,26 @@ func ReadFile(fileName string) *Graph {
 		}
 		x, _ := strconv.ParseFloat(line[len(line)-2], 64)
 		y, _ := strconv.ParseFloat(line[len(line)-1], 64)
-		graf.nodes[simpang] = Pair{x, y}
+		graf.nodes[i] = Info{x, y, simpang}
 	}
 
 	// Read & Split adjacency matrix
-	graf.adjacencyMatrix = make(map[string]map[string]float64)
-	for k1 := range graf.nodes {
-		graf.adjacencyMatrix[k1] = make(map[string]float64)
+	graf.adjacencyMatrix = make([][]float64, n)
+	for i := 0; i < n; i++ {
+		graf.adjacencyMatrix[i] = make([]float64, n)
 		scanner.Scan()
 		line := strings.Fields(scanner.Text())
-		j := 0
-		for k2 := range graf.nodes {
-			graf.adjacencyMatrix[k1][k2], _ = strconv.ParseFloat(line[j], 64)
+		for j := 0; j < n; j++ {
+			if line[j] == "0" {
+				graf.adjacencyMatrix[i][j] = 0
+			} else {
+				a := graf.nodes[i]
+				b := graf.nodes[j]
+				graf.adjacencyMatrix[i][j] = GetEuclidanDistance(a, b)
+				fmt.Println(graf.adjacencyMatrix[i][j])
+			}
 		}
 	}
-	// for i := 0; i < n; i++ {
-	// 	scanner.Scan()
-	// 	line := strings.Fields(scanner.Text())
-	// 	for j := 0; j < len(line); j++ {
-	// 	}
-	// }
+
 	return graf
 }
