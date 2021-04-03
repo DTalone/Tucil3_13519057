@@ -14,8 +14,21 @@ func main() {
 	fmt.Scanln(&fileName)
 	graf := graph.ReadFile(fileName)
 	nodes := graf.GetNodes()
-	for k, v := range nodes {
-		fmt.Println(k, v)
+	for true {
+		fmt.Print("Tampilkan Daftar Nama Simpul ? (y/n)")
+		var command string
+		fmt.Scanln(&command)
+		if command == "y" {
+			fmt.Println("Daftar Nama Simpul :")
+			graph.PrintListNodes(nodes)
+		}
+		fmt.Print("Masukkan Nama Posisi AWal : ")
+		var start string
+		fmt.Scanln(&start)
+		fmt.Print("Masukkan Nama Posisi Tujuan : ")
+		var goal string
+		fmt.Scanln(&goal)
+		fmt.Println(graf.Astar("Ciungwanara-Ganesa", "Ciungwanara-Gelap Nyawang"))
 	}
 	//--------------------------------------
 }

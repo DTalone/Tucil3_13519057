@@ -2,6 +2,8 @@ package graph
 
 import (
 	"bufio"
+	"container/heap"
+	"fmt"
 	"log"
 	"math"
 	"os"
@@ -9,21 +11,24 @@ import (
 	"strings"
 )
 
-// STRUKTUR DATA GRAPH
+// GRAPH
 
-// Atribut Struktur data Graph
+// Atribut Graph
 type Graph struct {
 	adjacencyMatrix [][]float64
 	totalNodes      int
 	nodes           []Info
 }
 
-// Getter
+// Getter Graph
 func (graf *Graph) GetTotalNodes() int {
 	return graf.totalNodes
 }
 func (graf *Graph) GetDistance(A string, B string) float64 {
 	idx1, idx2 := Search(A, B, graf.nodes)
+	if idx1 == -1 || idx2 == -1 {
+		log.Fatalf("Error : Nama Tidak Ditemukan!")
+	}
 	return graf.adjacencyMatrix[idx1][idx2]
 }
 func (graf *Graph) GetNodes() []Info {
@@ -37,23 +42,30 @@ func Search(A string, B string, nodes []Info) (int, int) {
 		if nodes[i].name == A {
 			idx1 = i
 		}
-		if nodes[i].name == A {
+		if nodes[i].name == B {
 			idx2 = i
 		}
 	}
 	return idx1, idx2
 }
 
-// STRUKTUR DATA PAIR
+// Print List Nodes
+func PrintListNodes(nodes []Info) {
+	for _, v := range nodes {
+		fmt.Println("→" + v.name)
+	}
+}
 
-// Atribut Struktur data pair
+// Info Nodes
+
+// Atribut Info
 type Info struct {
 	latitude  float64
 	longitude float64
 	name      string
 }
 
-// Getter
+// Getter Info
 func (info Info) GetLatitude() float64 {
 	return info.latitude
 }
@@ -64,7 +76,49 @@ func (info Info) GetName() string {
 	return info.name
 }
 
-// Error classification
+// Item A*
+type Item struct {
+	current string
+	goal    string
+	gn      float64
+	fn      float64
+	visited string
+	index   int
+}
+
+type PriorityQueue []*Item
+
+func (pq PriorityQueue) Len() int { return len(pq) }
+
+func (pq PriorityQueue) Less(i, j int) bool {
+	// return the lowest
+	return pq[i].fn < pq[j].fn
+}
+
+func (pq PriorityQueue) Swap(i, j int) {
+	pq[i], pq[j] = pq[j], pq[i]
+	pq[i].index = i
+	pq[j].index = j
+}
+
+func (pq *PriorityQueue) Push(x interface{}) {
+	n := len(*pq)
+	item := x.(*Item)
+	item.index = n
+	*pq = append(*pq, item)
+}
+
+func (pq *PriorityQueue) Pop() interface{} {
+	old := *pq
+	n := len(old)
+	item := old[n-1]
+	old[n-1] = nil  // avoid memory leak
+	item.index = -1 // for safety
+	*pq = old[0 : n-1]
+	return item
+}
+
+// Error input
 func Check(fileName string, e error) {
 	if e != nil {
 		log.Fatalf(fileName + ": The system cannot find the file specified.")
@@ -140,4 +194,54 @@ func ReadFile(fileName string) *Graph {
 		}
 	}
 	return graf
+}
+
+// A* Algorithm
+func isVisited(visited string, idx int) bool {
+	visitedInt, _ := strconv.Atoi(visited)
+	for i := 0; i < len(visited); i++ {
+		if visitedInt%10 == idx {
+			return true
+		}
+		visitedInt /= 10
+	}
+	return false
+}
+func (graf *Graph) Astar(A string, B string) float64 {
+	a, _ := Search(A, B, graf.nodes)
+	pq := make(PriorityQueue, 1)
+	pq[0] = &Item{
+		current: A,
+		goal:    B,
+		gn:      0,
+		fn:      graf.GetDistance(A, B),
+		visited: strconv.Itoa(a),
+		index:   0,
+	}
+	heap.Init(&pq)
+
+	//heap.Push(&pq, items)
+	for pq.Len() > 0 {
+		now := heap.Pop(&pq).(*Item)
+		if now.current == now.goal {
+			return now.fn
+		}
+		charac := now.visited
+		a, _ := strconv.Atoi(charac)
+		a = a % 10
+		for i := 0; i < graf.totalNodes; i++ {
+			if graf.adjacencyMatrix[a][i] > 0 && !isVisited(now.visited, i) {
+				item := &Item{
+					current: graf.nodes[i].name,
+					goal:    now.goal,
+					gn:      now.gn + graf.adjacencyMatrix[a][i],
+					fn:      graf.GetDistance(graf.nodes[i].name, now.goal),
+					visited: now.visited + strconv.Itoa(i),
+				}
+				heap.Push(&pq, item)
+			}
+		}
+
+	}
+	return 0.
 }
