@@ -1,14 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"html/template"
 	// "example.com/handler"
-	// "example.com/graph"
+	"example.com/graph"
 )
 
 func main() {
+
+	
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", homeHandler)
@@ -21,13 +25,7 @@ func main() {
 	log.Fatal(err)
 
 
-	// fmt.Println("Hello, World!")
-	// fmt.Println("Selamat datang di aplikasi A*")
-	// fmt.Print("Masukkan nama  file : ")
-	// var fileName string
-	// fmt.Scanln(&fileName)
-	// graf := graph.ReadFile(fileName)
-	// nodes := graf.GetNodes()
+	
 	// for true {
 	// 	fmt.Print("Tampilkan Daftar Nama Simpul ? (y/n)")
 	// 	var command string
@@ -44,10 +42,18 @@ func main() {
 	// 	fmt.Scanln(&goal)
 	// 	fmt.Println(graf.Astar(start, goal))
 	// }
-	//--------------------------------------
+	// --------------------------------------
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request){
+	fmt.Println("Hello, World!")
+	fmt.Println("Selamat datang di aplikasi A*")
+	fmt.Print("Masukkan nama  file : ")
+	var fileName string
+	fmt.Scanln(&fileName)
+	graf := graph.ReadFile(fileName)
+	nodes := graf.GetNodes()
+
 	log.Printf(r.URL.Path)
 
 	if r.URL.Path != "/"{
@@ -55,7 +61,11 @@ func homeHandler(w http.ResponseWriter, r *http.Request){
 		http.NotFound(w,r)
 		return
 	}
-
+	
+	data := map[string]interface{}{
+		"title": "Learning Golang Web",
+		"name":  "Batman",
+	}
 	tmpl, err := template.ParseFiles("src/views/index.html")
 	log.Println(tmpl)
 	if err != nil{
@@ -65,7 +75,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request){
 	}
 
 
-	err = tmpl.Execute(w, nil)
+	err = tmpl.Execute(w, nodes)
 	if err != nil{
 		log.Println(err)
 		http.Error(w, "Error", http.StatusInternalServerError)
