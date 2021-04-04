@@ -15,39 +15,23 @@ function initMap() {
     center: myLatLng,
   });
   map.addListener("click", (event) => {
-    addMarker(event.latLng);
+    addMarker(event.latLng, "Event Click");
   });
   addMarker(myLatLng);
   const markers = data.forEach(node => {
     let myLatLngLoop = { lat: node.Latitude, lng: node.Longitude };
-    console.log(myLatLngLoop);
-    const marker = new google.maps.Marker({
-      position: myLatLngLoop,
-      map,
-    });
-    const infowindow = new google.maps.InfoWindow({
-      content: "<j>"+node.Name+"</h>"+"<p>Location:" + marker.getPosition() + "</p>",
-    });
-    marker.addListener("click", () => {
-      infowindow.open(map, marker);
-    });
+    addMarker(myLatLngLoop, node.Name)
   });
-  // Add a marker clusterer to manage the markers.
-  new MarkerClusterer(map, markers, {
-    imagePath:
-      "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
-  });
-  
 }
 
 // Adds a marker to the map and push to the array.
-function addMarker(location) {
+function addMarker(location, label) {
   const marker = new google.maps.Marker({
     position: location,
     map: map,
   });
   const infowindow = new google.maps.InfoWindow({
-    content: "<j>"+"Event click"+"</h>"+"<p>Location:" + marker.getPosition() + "</p>",
+    content: "<j>"+label+"</h>"+"<p>Location:" + marker.getPosition() + "</p>",
   });
   marker.addListener("click", () => {
     infowindow.open(map, marker);
