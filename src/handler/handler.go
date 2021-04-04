@@ -5,10 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"path"
-<<<<<<< HEAD
-=======
 
->>>>>>> 07bd0deee0d6703c1aefdf8410f0fa5651999d7f
 	"example.com/graph"
 )
 
@@ -33,12 +30,6 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	fileName := "tes1.txt"
 	graf := graph.ReadFile(fileName)
 	nodes := graf.GetNodes()
-<<<<<<< HEAD
-	
-
-	fmt.Println(nodes[1].GetLatitude())
-	// contoh := {"nama": "a1", "nama1": "b2", "nama2": "c3"}
-=======
 	// newObject := make([]Info, len(nodes))
 	// i := 0
 	// for _, v := range nodes {
@@ -57,7 +48,6 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 	// fmt.Println(nodes)
 	//contoh := {"nama": "a1", "nama1": "b2", "nama2": "c3"}
->>>>>>> 07bd0deee0d6703c1aefdf8410f0fa5651999d7f
 
 	var filepath = path.Join("views", "index.html")
 	var tmpl, err = template.ParseFiles(filepath)
@@ -71,11 +61,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	// 	"name":  "Batman",
 	// }
 
-<<<<<<< HEAD
-	err = tmpl.Execute(w, len(nodes))
-=======
 	err = tmpl.Execute(w, nodes)
->>>>>>> 07bd0deee0d6703c1aefdf8410f0fa5651999d7f
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
