@@ -20,6 +20,23 @@ func Start() {
 	http.ListenAndServe(":8080", nil)
 }
 func homeHandler(w http.ResponseWriter, r *http.Request) {
+	fileName := "tes1.txt"
+	graf := graph.ReadFile(fileName)
+	nodes := graf.GetNodes()
+	
+	
+	// contohs := [len(nodes)][3]int
+
+	// for i := 0 ; i < len(contohs); i++{
+	// 	contohs[i][0] = nodes[i].latitude
+	// 	contohs[i][1] = nodes[i].longitude
+	// 	contohs[i][2] = nodes[i].name
+	// }
+
+
+	// fmt.Println(nodes)
+	contoh := {"nama": "a1", "nama1": "b2", "nama2": "c3"}
+
 	var filepath = path.Join("views", "index.html")
 	var tmpl, err = template.ParseFiles(filepath)
 	if err != nil {
@@ -27,12 +44,12 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var data = map[string]interface{}{
-		"title": "Learning Golang Web",
-		"name":  "Batman",
-	}
+	// var data = map[string]interface{}{
+	// 	"title": "Learning Golang Web",
+	// 	"name":  "Batman",
+	// }
 
-	err = tmpl.Execute(w, data)
+	err = tmpl.Execute(w, contohs)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
