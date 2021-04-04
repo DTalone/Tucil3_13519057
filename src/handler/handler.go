@@ -5,8 +5,15 @@ import (
 	"html/template"
 	"net/http"
 	"path"
-	// "example.com/graph"
+
+	"example.com/graph"
 )
+
+// type Info struct {
+// 	Latitude  float64
+// 	Longitude float64
+// 	Name      string
+// }
 
 func Start() {
 	http.NewServeMux()
@@ -23,8 +30,14 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	fileName := "tes1.txt"
 	graf := graph.ReadFile(fileName)
 	nodes := graf.GetNodes()
-	
-	
+	// newObject := make([]Info, len(nodes))
+	// i := 0
+	// for _, v := range nodes {
+	// 	newObject[i].latitude = v.GetLatitude()
+	// 	newObject[i].longitude = v.GetLongitude()
+	// 	newObject[i].name = v.GetName()
+	// 	i++
+	// }
 	// contohs := [len(nodes)][3]int
 
 	// for i := 0 ; i < len(contohs); i++{
@@ -33,9 +46,8 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	// 	contohs[i][2] = nodes[i].name
 	// }
 
-
 	// fmt.Println(nodes)
-	contoh := {"nama": "a1", "nama1": "b2", "nama2": "c3"}
+	//contoh := {"nama": "a1", "nama1": "b2", "nama2": "c3"}
 
 	var filepath = path.Join("views", "index.html")
 	var tmpl, err = template.ParseFiles(filepath)
@@ -49,7 +61,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	// 	"name":  "Batman",
 	// }
 
-	err = tmpl.Execute(w, contohs)
+	err = tmpl.Execute(w, nodes)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
