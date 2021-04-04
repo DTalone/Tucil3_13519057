@@ -1,19 +1,26 @@
 // [START maps_marker_simple]
 
-function getNodes(dataa) {
-  console.log(dataa);
-}
+
 
 function initMap() {
-  const myLatLng = { lat: -25.363, lng: 131.044 };
+
+  console.log("anjay");
+  console.log(data);
+
+  const myLatLng = { lat: data[0].Latitude, lng: data[0].Longitude };
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 4,
     center: myLatLng,
   });
-  new google.maps.Marker({
-    position: myLatLng,
-    map,
-    title: "Hello World!",
+
+  data.forEach(node => {
+    let myLatLngLoop = { lat: node.Latitude, lng: node.Longitude };
+    console.log(myLatLngLoop);
+    new google.maps.Marker({
+      position: myLatLngLoop,
+      map,
+      title: "Hello World!",
+    });
   });
 }
   // [END maps_marker_simple]

@@ -6,7 +6,10 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <link rel="stylesheet" type="text/css" href="/static/style.css" />
     <script src="static/index.js"></script>
-    <script> getNodes({{.}})</script>
+    <script> 
+    var data = {{.}};
+    initMap();
+    </script>
 
   </head>
   <body>
