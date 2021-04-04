@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+<<<<<<< HEAD
 	"log"
 	"net/http"
 	"html/template"
@@ -26,6 +27,20 @@ func main() {
 
 
 	
+=======
+
+	"example.com/handler"
+)
+
+func main() {
+	fmt.Println("Hello, World!")
+	fmt.Println("Selamat datang di aplikasi A*")
+	// fmt.Print("Masukkan nama  file : ")
+	// var fileName string
+	// fmt.Scanln(&fileName)
+	// graf := graph.ReadFile(fileName)
+	// nodes := graf.GetNodes()
+>>>>>>> 4e42fc5b1543fb95264af7005d92363324bf39a6
 	// for true {
 	// 	fmt.Print("Tampilkan Daftar Nama Simpul ? (y/n)")
 	// 	var command string
@@ -40,8 +55,12 @@ func main() {
 	// 	fmt.Print("Masukkan Nama Posisi Tujuan : ")
 	// 	var goal string
 	// 	fmt.Scanln(&goal)
-	// 	fmt.Println(graf.Astar(start, goal))
+	// 	distance, rute := graf.Astar("Dago-Ganesa", "Ganesa-Tamansari")
+	// 	fmt.Println(distance)
+	// 	ruteInfo := graf.GetNodeswithIndex(rute)
+	// 	fmt.Println(ruteInfo)
 	// }
+<<<<<<< HEAD
 	// --------------------------------------
 }
 
@@ -85,4 +104,8 @@ func homeHandler(w http.ResponseWriter, r *http.Request){
 
 func helloHandler(w http.ResponseWriter, r *http.Request){
 	w.Write([]byte("anajya ajnajnajibauhb"))
+=======
+	//--------------------------------------
+	handler.Start()
+>>>>>>> 4e42fc5b1543fb95264af7005d92363324bf39a6
 }

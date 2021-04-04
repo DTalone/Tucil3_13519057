@@ -1,26 +1,43 @@
 package handler
 
 import (
-	"log"
+	"fmt"
+	"html/template"
 	"net/http"
 	"path"
-	"html/template"
-
 	// "example.com/graph"
 )
 
-func homeHandler(w http.ResponseWriter, r *http.Request){
+func Start() {
+	http.NewServeMux()
 
-	tmpl, err := template.ParseFiles(path.Join("views", "index.html"))
-	if err != nil{
-		http.Error(w, "Error", http.StatusInternalServerError)
+	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/Hello", helloHandler)
+
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))
+
+	fmt.Println("server started at localhost:8080")
+	http.ListenAndServe(":8080", nil)
+}
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	var filepath = path.Join("views", "index.html")
+	var tmpl, err = template.ParseFiles(filepath)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-
-	err = tmpl.Execute(w, nil)
-	if err != nil{
-		http.Error(w, "Error", http.StatusInternalServerError)
-		return
+	var data = map[string]interface{}{
+		"title": "Learning Golang Web",
+		"name":  "Batman",
 	}
+
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("anajya ajnajnajibauhb"))
 }
