@@ -1,46 +1,40 @@
 package handler
 
 import (
+	"fmt"
 	"html/template"
-	"log"
 	"net/http"
+	"path"
 	// "example.com/graph"
 )
 
 func Start() {
-	mux := http.NewServeMux()
+	http.NewServeMux()
 
-	mux.HandleFunc("/", homeHandler)
-	mux.HandleFunc("/Hello", helloHandler)
+	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/Hello", helloHandler)
 
-	log.Println("starting port 8080")
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))
 
-	err := http.ListenAndServe(":8080", mux)
-
-	log.Fatal(err)
+	fmt.Println("server started at localhost:8080")
+	http.ListenAndServe(":8080", nil)
 }
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf(r.URL.Path)
-
-	if r.URL.Path != "/" {
-
-		http.NotFound(w, r)
+	var filepath = path.Join("views", "index.html")
+	var tmpl, err = template.ParseFiles(filepath)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	tmpl, err := template.ParseFiles("../views/index.html")
-	log.Println(tmpl)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Error", http.StatusInternalServerError)
-		return
+	var data = map[string]interface{}{
+		"title": "Learning Golang Web",
+		"name":  "Batman",
 	}
 
-	err = tmpl.Execute(w, nil)
+	err = tmpl.Execute(w, data)
 	if err != nil {
-		log.Println(err)
-		http.Error(w, "Error", http.StatusInternalServerError)
-		return
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
