@@ -34,7 +34,15 @@ func (graf *Graph) GetDistance(A string, B string) float64 {
 func (graf *Graph) GetNodes() []Info {
 	return graf.nodes
 }
+func (graf *Graph) GetNodeswithIndex(visited string) []Info {
+	answer := make([]Info, len(visited))
 
+	for i := 0; i < len(visited); i++ {
+		idx, _ := strconv.Atoi(string(visited[i]))
+		answer[i] = graf.nodes[idx]
+	}
+	return answer
+}
 func Search(A string, B string, nodes []Info) (int, int) {
 	idx1 := -1
 	idx2 := -1
@@ -207,7 +215,7 @@ func isVisited(visited string, idx int) bool {
 	}
 	return false
 }
-func (graf *Graph) Astar(A string, B string) float64 {
+func (graf *Graph) Astar(A string, B string) (float64, string) {
 	a, _ := Search(A, B, graf.nodes)
 	pq := make(PriorityQueue, 1)
 	pq[0] = &Item{
@@ -220,15 +228,14 @@ func (graf *Graph) Astar(A string, B string) float64 {
 	}
 	heap.Init(&pq)
 
-	//heap.Push(&pq, items)
+	// while pq is not empty
 	for pq.Len() > 0 {
 		now := heap.Pop(&pq).(*Item)
 		if now.current == now.goal {
-			return now.fn
+			return now.fn, now.visited
 		}
-		charac := now.visited
-		a, _ := strconv.Atoi(charac)
-		a = a % 10
+		charac := string(now.visited[len(now.visited)-1])
+		a, _ = strconv.Atoi(charac)
 		for i := 0; i < graf.totalNodes; i++ {
 			if graf.adjacencyMatrix[a][i] > 0 && !isVisited(now.visited, i) {
 				updategn := now.gn + graf.adjacencyMatrix[a][i]
@@ -246,5 +253,5 @@ func (graf *Graph) Astar(A string, B string) float64 {
 		}
 
 	}
-	return 0.
+	return 0., ""
 }
