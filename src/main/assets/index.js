@@ -13,6 +13,7 @@ function initMap() {
     center: myLatLng,
   });
   map.addListener("click", (e) => {
+    console.log(e);
     placeMarkerAndPanTo(e.latLng, map);
   });
 
@@ -39,9 +40,15 @@ function initMap() {
 }
 
 function placeMarkerAndPanTo(latLng, map) {
-  new google.maps.Marker({
+  const marker = new google.maps.Marker({
     position: latLng,
     map: map,
+  });
+  const infowindow = new google.maps.InfoWindow({
+    content: "<j>"+"Event click"+"</h>"+"<p>Location:" + marker.getPosition() + "</p>",
+  });
+  marker.addListener("click", () => {
+    infowindow.open(map, marker);
   });
   map.panTo(latLng);
 }
