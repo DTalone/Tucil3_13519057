@@ -47,10 +47,10 @@ func Search(A string, B string, nodes []Info) (int, int) {
 	idx1 := -1
 	idx2 := -1
 	for i := 0; i < len(nodes); i++ {
-		if nodes[i].name == A {
+		if nodes[i].Name == A {
 			idx1 = i
 		}
-		if nodes[i].name == B {
+		if nodes[i].Name == B {
 			idx2 = i
 		}
 	}
@@ -60,7 +60,7 @@ func Search(A string, B string, nodes []Info) (int, int) {
 // Print List Nodes
 func PrintListNodes(nodes []Info) {
 	for _, v := range nodes {
-		fmt.Println("→" + v.name)
+		fmt.Println("→" + v.Name)
 	}
 }
 
@@ -68,20 +68,20 @@ func PrintListNodes(nodes []Info) {
 
 // Atribut Info
 type Info struct {
-	latitude  float64
-	longitude float64
-	name      string
+	Latitude  float64
+	Longitude float64
+	Name      string
 }
 
 // Getter Info
 func (info Info) GetLatitude() float64 {
-	return info.latitude
+	return info.Latitude
 }
 func (info Info) GetLongitude() float64 {
-	return info.longitude
+	return info.Longitude
 }
 func (info Info) GetName() string {
-	return info.name
+	return info.Name
 }
 
 // Item A*
@@ -139,12 +139,12 @@ func degreesToRadians(d float64) float64 {
 }
 func GetEuclidanDistance(A Info, B Info) float64 {
 	// Coordinate A in radians
-	latitude1 := degreesToRadians(A.latitude)
-	longitude1 := degreesToRadians(A.longitude)
+	latitude1 := degreesToRadians(A.Latitude)
+	longitude1 := degreesToRadians(A.Longitude)
 
 	// Coordinate B in radians
-	latitude2 := degreesToRadians(B.latitude)
-	longitude2 := degreesToRadians(B.longitude)
+	latitude2 := degreesToRadians(B.Latitude)
+	longitude2 := degreesToRadians(B.Longitude)
 
 	// Haversine Formula
 	differencelongitude := longitude2 - longitude1
@@ -239,10 +239,10 @@ func (graf *Graph) Astar(A string, B string) (float64, string) {
 		for i := 0; i < graf.totalNodes; i++ {
 			if graf.adjacencyMatrix[a][i] > 0 && !isVisited(now.visited, i) {
 				updategn := now.gn + graf.adjacencyMatrix[a][i]
-				updatehn := graf.GetDistance(graf.nodes[i].name, now.goal)
+				updatehn := graf.GetDistance(graf.nodes[i].Name, now.goal)
 				updatefn := updategn + updatehn
 				item := &Item{
-					current: graf.nodes[i].name,
+					current: graf.nodes[i].Name,
 					goal:    now.goal,
 					gn:      updategn,
 					fn:      updatefn,
