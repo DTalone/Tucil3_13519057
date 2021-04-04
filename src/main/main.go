@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"path"
 	"html/template"
 	// "example.com/handler"
 	// "example.com/graph"
@@ -52,13 +51,15 @@ func homeHandler(w http.ResponseWriter, r *http.Request){
 	log.Printf(r.URL.Path)
 
 	if r.URL.Path != "/"{
+		
 		http.NotFound(w,r)
 		return
 	}
 
-	tmpl, err := template.ParseFiles(path.Join("example.com/views", "index.html"))
+	tmpl, err := template.ParseFiles("src/views/index.html")
 	log.Println(tmpl)
 	if err != nil{
+		log.Println(err)
 		http.Error(w, "Error", http.StatusInternalServerError)
 		return
 	}
@@ -66,6 +67,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request){
 
 	err = tmpl.Execute(w, nil)
 	if err != nil{
+		log.Println(err)
 		http.Error(w, "Error", http.StatusInternalServerError)
 		return
 	}
