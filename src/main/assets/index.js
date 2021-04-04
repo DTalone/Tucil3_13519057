@@ -1,8 +1,8 @@
 // [START maps_marker_simple]
 
-
 let map;
 let markers = [];
+
 
 function initMap() {
 
@@ -31,7 +31,7 @@ function addMarker(location, label) {
     map: map,
   });
   const infowindow = new google.maps.InfoWindow({
-    content: "<j>"+label+"</h>"+"<p>Location:" + marker.getPosition() + "</p>",
+    content: "<j>" + label + "</h>" + "<p>Location:" + marker.getPosition() + "</p>",
   });
   marker.addListener("click", () => {
     infowindow.open(map, marker);
