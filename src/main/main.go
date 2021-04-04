@@ -3,12 +3,16 @@ package main
 import (
 	"log"
 	"net/http"
+	"path"
+	"html/template"
+	// "example.com/handler"
 	// "example.com/graph"
 )
 
 func main() {
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("/", homeHandler)
 	mux.HandleFunc("/Hello", helloHandler)
 
 	log.Println("starting port 8080")
@@ -16,6 +20,7 @@ func main() {
 	err := http.ListenAndServe(":8080", mux)
 
 	log.Fatal(err)
+
 
 	// fmt.Println("Hello, World!")
 	// fmt.Println("Selamat datang di aplikasi A*")
@@ -41,6 +46,29 @@ func main() {
 	// 	fmt.Println(graf.Astar(start, goal))
 	// }
 	//--------------------------------------
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request){
+	log.Printf(r.URL.Path)
+
+	if r.URL.Path != "/"{
+		http.NotFound(w,r)
+		return
+	}
+
+	tmpl, err := template.ParseFiles(path.Join("example.com/views", "index.html"))
+	log.Println(tmpl)
+	if err != nil{
+		http.Error(w, "Error", http.StatusInternalServerError)
+		return
+	}
+
+
+	err = tmpl.Execute(w, nil)
+	if err != nil{
+		http.Error(w, "Error", http.StatusInternalServerError)
+		return
+	}
 }
 
 func helloHandler(w http.ResponseWriter, r *http.Request){
