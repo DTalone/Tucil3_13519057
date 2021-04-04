@@ -9,18 +9,39 @@ function initMap() {
 
   const myLatLng = { lat: data[0].Latitude, lng: data[0].Longitude };
   const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 4,
+    zoom: 15,
     center: myLatLng,
   });
+  map.addListener("click", (e) => {
+    placeMarkerAndPanTo(e.latLng, map);
+  });
 
-  data.forEach(node => {
+  const markers = data.forEach(node => {
     let myLatLngLoop = { lat: node.Latitude, lng: node.Longitude };
     console.log(myLatLngLoop);
-    new google.maps.Marker({
+    const marker = new google.maps.Marker({
       position: myLatLngLoop,
       map,
-      title: "Hello World!",
+    });
+    const infowindow = new google.maps.InfoWindow({
+      content: "<j>"+node.Name+"</h>"+"<p>Location:" + marker.getPosition() + "</p>",
+    });
+    marker.addListener("click", () => {
+      infowindow.open(map, marker);
     });
   });
+  // Add a marker clusterer to manage the markers.
+  new MarkerClusterer(map, markers, {
+    imagePath:
+      "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+  });
+  
 }
-  // [END maps_marker_simple]
+
+function placeMarkerAndPanTo(latLng, map) {
+  new google.maps.Marker({
+    position: latLng,
+    map: map,
+  });
+  map.panTo(latLng);
+}
