@@ -2,7 +2,7 @@ module example.com/main
 
 go 1.16
 
-replace example.com/graph => graph
+replace example.com/graph => ../graph
 
 replace example.com/handler => ../handler
 
