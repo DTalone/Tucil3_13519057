@@ -20,6 +20,24 @@ function initMap() {
     addMarker(event.latLng, "Event Click "+idxClick);
     idxClick++;
   });
+  setMapOnAll(map);
+}
+
+function initRute() {
+  const flightPlanCoordinates = [];
+  
+  for (i = 0; i < data.length; i++) {
+    flightPlanCoordinates.push({ lat: data[i].Latitude, lng: data[i].Longitude });
+    addMarker(flightPlanCoordinates[i], data[i].Name)
+  }
+  map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 15,
+    center: flightPlanCoordinates[0],
+  });
+  map.addListener("click", (event) => {
+    addMarker(event.latLng, "Event Click "+idxClick);
+    idxClick++;
+  });
   const flightPath = new google.maps.Polyline({
     path: flightPlanCoordinates,
     geodesic: true,
@@ -28,8 +46,8 @@ function initMap() {
     strokeWeight: 2,
   });
   flightPath.setMap(map);
+  setMapOnAll(map);
 }
-
 
 // Adds a marker to the map and push to the array.
 function addMarker(location, label) {
