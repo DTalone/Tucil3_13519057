@@ -2,38 +2,24 @@
 
 let map;
 let markers = [];
-
-
-// function initMap() {
-
-//   console.log(data);
-
-//   const myLatLng = { lat: data[0].Latitude, lng: data[0].Longitude };
-//   map = new google.maps.Map(document.getElementById("map"), {
-//     zoom: 15,
-//     center: myLatLng,
-//   });
-//   map.addListener("click", (event) => {
-//     addMarker(event.latLng, "Event Click");
-//   });
-//   addMarker(myLatLng);
-//   const markers = data.forEach(node => {
-//     let myLatLngLoop = { lat: node.Latitude, lng: node.Longitude };
-//     addMarker(myLatLngLoop, node.Name)
-//   });
-// }
+let idxClick=0;
+let path = [];
 
 function initMap() {
-  const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 3,
-    center: { lat: 0, lng: -180 },
-    mapTypeId: "terrain",
-  });
   const flightPlanCoordinates = [];
-
+  
   for (i = 0; i < data.length; i++) {
     flightPlanCoordinates.push({ lat: data[i].Latitude, lng: data[i].Longitude });
+    addMarker(flightPlanCoordinates[i], data[i].Name)
   }
+  map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 15,
+    center: flightPlanCoordinates[0],
+  });
+  map.addListener("click", (event) => {
+    addMarker(event.latLng, "Event Click "+idxClick);
+    idxClick++;
+  });
   const flightPath = new google.maps.Polyline({
     path: flightPlanCoordinates,
     geodesic: true,
