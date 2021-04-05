@@ -4,25 +4,46 @@ let map;
 let markers = [];
 
 
+// function initMap() {
+
+//   console.log(data);
+
+//   const myLatLng = { lat: data[0].Latitude, lng: data[0].Longitude };
+//   map = new google.maps.Map(document.getElementById("map"), {
+//     zoom: 15,
+//     center: myLatLng,
+//   });
+//   map.addListener("click", (event) => {
+//     addMarker(event.latLng, "Event Click");
+//   });
+//   addMarker(myLatLng);
+//   const markers = data.forEach(node => {
+//     let myLatLngLoop = { lat: node.Latitude, lng: node.Longitude };
+//     addMarker(myLatLngLoop, node.Name)
+//   });
+// }
+
 function initMap() {
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 3,
+    center: { lat: 0, lng: -180 },
+    mapTypeId: "terrain",
+  });
+  const flightPlanCoordinates = [];
 
-  console.log("anjay");
-  console.log(data);
-
-  const myLatLng = { lat: data[0].Latitude, lng: data[0].Longitude };
-  map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 15,
-    center: myLatLng,
+  for (i = 0; i < data.length; i++) {
+    flightPlanCoordinates.push({ lat: data[i].Latitude, lng: data[i].Longitude });
+  }
+  const flightPath = new google.maps.Polyline({
+    path: flightPlanCoordinates,
+    geodesic: true,
+    strokeColor: "#FF0000",
+    strokeOpacity: 1.0,
+    strokeWeight: 2,
   });
-  map.addListener("click", (event) => {
-    addMarker(event.latLng, "Event Click");
-  });
-  addMarker(myLatLng);
-  const markers = data.forEach(node => {
-    let myLatLngLoop = { lat: node.Latitude, lng: node.Longitude };
-    addMarker(myLatLngLoop, node.Name)
-  });
+  flightPath.setMap(map);
 }
+
 
 // Adds a marker to the map and push to the array.
 function addMarker(location, label) {
