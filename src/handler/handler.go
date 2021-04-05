@@ -8,13 +8,15 @@ import (
 	"example.com/graph"
 )
 
-
+var graf = graph.ReadFile("tes1.txt")
 
 func Start() {
 	http.NewServeMux()
 	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/polyline", polyLineHandler)
 	http.HandleFunc("/map", indexHandler)
 	http.HandleFunc("/Hello", helloHandler)
+	http.HandleFunc("/input", inputHandler)
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))
 
@@ -96,4 +98,66 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Error(w, "", http.StatusBadRequest)
+}
+
+
+func inputHandler(w http.ResponseWriter, r *http.Request){
+	if r.Method == "GET" {
+		fmt.Println("masuk sini")
+		var filepath = path.Join("views", "input.html")
+        var tmpl = template.Must(template.New("form").ParseFiles(filepath))
+        var err = tmpl.Execute(w, nil)
+
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+        }
+        return
+    }
+
+
+	var filepath = path.Join("views", "input.html")
+	var tmpl, err = template.ParseFiles(filepath)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	http.Error(w, "", http.StatusBadRequest)
+}
+
+
+func polyLineHandler(w http.ResponseWriter, r *http.Request){
+	if r.Method == "POST" {
+		fmt.Println("anaaaa")
+		var filepath = path.Join("views", "polyline.html")
+        var tmpl = template.Must(template.New("result").ParseFiles(filepath))
+
+        if err := r.ParseForm(); err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+
+        var simpulAwal = r.FormValue("simpulAwal")
+		var simpulAkhir = r.FormValue("simpulAkhir")
+		fmt.Println(simpulAwal)
+		distance, rute := graf.Astar(simpulAwal, simpulAkhir)
+		fmt.Println(distance)
+		ruteInfo := graf.GetNodeswithIndex(rute)
+		fmt.Println(ruteInfo)
+		// fmt.Println(fileName)
+		// graf := graph.ReadFile(fileName)
+		// nodes := graf.GetNodes()
+
+
+        if err := tmpl.Execute(w, ruteInfo); err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+        }
+        return
+    }
+	fmt.Println("anjay")
 }
