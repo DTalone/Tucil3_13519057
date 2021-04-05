@@ -8,16 +8,12 @@ import (
 	"example.com/graph"
 )
 
-// type Info struct {
-// 	Latitude  float64
-// 	Longitude float64
-// 	Name      string
-// }
+
 
 func Start() {
 	http.NewServeMux()
-
 	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/map", indexHandler)
 	http.HandleFunc("/Hello", helloHandler)
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))
@@ -25,47 +21,79 @@ func Start() {
 	fmt.Println("server started at localhost:8080")
 	http.ListenAndServe(":8080", nil)
 }
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "POST" {
+		var filepath = path.Join("views", "index.html")
+        var tmpl = template.Must(template.New("result").ParseFiles(filepath))
+
+        if err := r.ParseForm(); err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+
+        var fileName = r.FormValue("fileName")
+		fmt.Println(fileName)
+		graf := graph.ReadFile(fileName)
+		nodes := graf.GetNodes()
+
+
+        if err := tmpl.Execute(w, nodes); err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+        }
+        return
+    }
+
+
+
+
+	// fileName := "tes1.txt"
+	// graf := graph.ReadFile(fileName)
+	// nodes := graf.GetNodes()
+	
+
+	// var filepath = path.Join("views", "index.html")
+	// var tmpl, err = template.ParseFiles(filepath)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
+
+	// err = tmpl.Execute(w, nodes)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// }
+}
+
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("anajya ajnajnajibauhb"))
+}
+
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	fileName := "tes1.txt"
-	graf := graph.ReadFile(fileName)
-	nodes := graf.GetNodes()
-	// newObject := make([]Info, len(nodes))
-	// i := 0
-	// for _, v := range nodes {
-	// 	newObject[i].latitude = v.GetLatitude()
-	// 	newObject[i].longitude = v.GetLongitude()
-	// 	newObject[i].name = v.GetName()
-	// 	i++
-	// }
-	// contohs := [len(nodes)][3]int
 
-	// for i := 0 ; i < len(contohs); i++{
-	// 	contohs[i][0] = nodes[i].latitude
-	// 	contohs[i][1] = nodes[i].longitude
-	// 	contohs[i][2] = nodes[i].name
-	// }
+	if r.Method == "GET" {
+		var filepath = path.Join("views", "home.html")
+        var tmpl = template.Must(template.New("form").ParseFiles(filepath))
+        var err = tmpl.Execute(w, nil)
 
-	// fmt.Println(nodes)
-	//contoh := {"nama": "a1", "nama1": "b2", "nama2": "c3"}
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+        }
+        return
+    }
 
-	var filepath = path.Join("views", "index.html")
+
+	var filepath = path.Join("views", "home.html")
 	var tmpl, err = template.ParseFiles(filepath)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// var data = map[string]interface{}{
-	// 	"title": "Learning Golang Web",
-	// 	"name":  "Batman",
-	// }
-
-	err = tmpl.Execute(w, nodes)
+	err = tmpl.Execute(w, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("anajya ajnajnajibauhb"))
+	http.Error(w, "", http.StatusBadRequest)
 }
