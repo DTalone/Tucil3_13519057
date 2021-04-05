@@ -133,7 +133,6 @@ func inputHandler(w http.ResponseWriter, r *http.Request){
 
 func polyLineHandler(w http.ResponseWriter, r *http.Request){
 	if r.Method == "POST" {
-		fmt.Println("anaaaa")
 		var filepath = path.Join("views", "polyline.html")
         var tmpl = template.Must(template.New("result").ParseFiles(filepath))
 
@@ -141,14 +140,17 @@ func polyLineHandler(w http.ResponseWriter, r *http.Request){
             http.Error(w, err.Error(), http.StatusInternalServerError)
             return
         }
-
+		// graf = graph.ReadFile("tes1.txt")
         var simpulAwal = r.FormValue("simpulAwal")
 		var simpulAkhir = r.FormValue("simpulAkhir")
 		fmt.Println(simpulAwal)
+		fmt.Println("gan2")
 		distance, rute := graf.Astar(simpulAwal, simpulAkhir)
+		fmt.Println("gan11")
 		fmt.Println(distance)
 		ruteInfo := graf.GetNodeswithIndex(rute)
 		fmt.Println(ruteInfo)
+		fmt.Println("gann")
 		// fmt.Println(fileName)
 		// graf := graph.ReadFile(fileName)
 		// nodes := graf.GetNodes()
