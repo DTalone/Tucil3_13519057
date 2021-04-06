@@ -2,12 +2,13 @@
 
 let map;
 let markers = [];
-let idxClick=0;
+let idxClick = 0;
 let path = [];
+let distance = 0;
 
 function initMap() {
   const flightPlanCoordinates = [];
-  
+
   for (i = 0; i < data.length; i++) {
     flightPlanCoordinates.push({ lat: data[i].Latitude, lng: data[i].Longitude });
     addMarker(flightPlanCoordinates[i], data[i].Name)
@@ -17,7 +18,7 @@ function initMap() {
     center: flightPlanCoordinates[0],
   });
   map.addListener("click", (event) => {
-    addMarker(event.latLng, "Event Click "+idxClick);
+    addMarker(event.latLng, "Event Click " + idxClick);
     idxClick++;
   });
   setMapOnAll(map);
@@ -25,8 +26,13 @@ function initMap() {
 
 function initRute() {
   const flightPlanCoordinates = [];
-  
-  for (i = 0; i < data.length; i++) {
+  distance = data[data.length - 1].Latitude;
+  if (distance == 0) {
+    document.getElementById("distance").innerHTML = "Tidak Ada Jalur";
+  } else {
+    document.getElementById("distance").innerHTML = "Distance : " + distance;
+  }
+  for (i = 0; i < data.length - 1; i++) {
     flightPlanCoordinates.push({ lat: data[i].Latitude, lng: data[i].Longitude });
     addMarker(flightPlanCoordinates[i], data[i].Name)
   }
@@ -35,7 +41,7 @@ function initRute() {
     center: flightPlanCoordinates[0],
   });
   map.addListener("click", (event) => {
-    addMarker(event.latLng, "Event Click "+idxClick);
+    addMarker(event.latLng, "Event Click " + idxClick);
     idxClick++;
   });
   const flightPath = new google.maps.Polyline({
@@ -46,7 +52,6 @@ function initRute() {
     strokeWeight: 2,
   });
   flightPath.setMap(map);
-  setMapOnAll(map);
 }
 
 // Adds a marker to the map and push to the array.

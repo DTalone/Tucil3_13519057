@@ -8,7 +8,8 @@ import (
 	"example.com/graph"
 )
 
-var graf = graph.ReadFile("tes1.txt")
+// var graf = graph.ReadFile("tes1.txt")
+var fileName = "a"
 
 func Start() {
 	http.NewServeMux()
@@ -34,7 +35,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
             return
         }
 
-        var fileName = r.FormValue("fileName")
+        fileName = r.FormValue("fileName")
 		fmt.Println(fileName)
 		graf := graph.ReadFile(fileName)
 		nodes := graf.GetNodes()
@@ -144,11 +145,16 @@ func polyLineHandler(w http.ResponseWriter, r *http.Request){
         var simpulAwal = r.FormValue("simpulAwal")
 		var simpulAkhir = r.FormValue("simpulAkhir")
 		fmt.Println(simpulAwal)
+
+		fmt.Println(fileName)
+		graf := graph.ReadFile(fileName)
+
+
 		fmt.Println("gan2")
 		distance, rute := graf.Astar(simpulAwal, simpulAkhir)
 		fmt.Println("gan11")
 		fmt.Println(distance)
-		ruteInfo := graf.GetNodeswithIndex(rute)
+		ruteInfo := graf.GetNodeswithIndex(rute, distance)
 		fmt.Println(ruteInfo)
 		fmt.Println("gann")
 		// fmt.Println(fileName)

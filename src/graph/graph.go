@@ -34,13 +34,14 @@ func (graf *Graph) GetDistance(A string, B string) float64 {
 func (graf *Graph) GetNodes() []Info {
 	return graf.nodes
 }
-func (graf *Graph) GetNodeswithIndex(visited string) []Info {
-	answer := make([]Info, len(visited))
+func (graf *Graph) GetNodeswithIndex(visited string, distance float64) []Info {
+	answer := make([]Info, len(visited) + 1)
 
 	for i := 0; i < len(visited); i++ {
 		idx, _ := strconv.Atoi(string(visited[i]))
 		answer[i] = graf.nodes[idx]
 	}
+	answer[len(visited)] = Info{distance, 0, "a"}
 	return answer
 }
 func Search(A string, B string, nodes []Info) (int, int) {
