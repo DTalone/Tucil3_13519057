@@ -263,7 +263,6 @@ func (graf *Graph) Astar(A string, B string) (float64, []string) {
 		now := heap.Pop(&pq).(*Item)
 		// apabila node sekarang == tujuan maka return
 		fmt.Println(now.visited)
-		fmt.Printf(now.current)
 		if now.current == now.goal {
 			return now.fn, now.visited
 		}
