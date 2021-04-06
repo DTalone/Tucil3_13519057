@@ -28,7 +28,15 @@ function initRute() {
   const flightPlanCoordinates = [];
   distance = data[data.length - 1].Latitude;
   if (distance == 0) {
-    document.getElementById("distance").innerHTML = "Tidak Ada Jalur";
+    console.log("YAMAMAMAM")
+    var arrayy = ["1", "2", "3"];
+    var dist = document.getElementById("distance")
+    for (j = 0; j < arrayy.length; j++) {
+      dist.innerHTML += `<li>${arrayy[j]}</li>`
+    }
+    // document.getElementById("distance").innerHTML = `Tidak Ada apa Jalur</a>`;
+    initMap();
+    return
   } else {
     document.getElementById("distance").innerHTML = "Distance : " + distance;
   }
