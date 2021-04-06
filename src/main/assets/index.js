@@ -38,7 +38,7 @@ function initRute() {
     initMap();
     return
   } else {
-    document.getElementById("distance").innerHTML = "Distance : " + distance;
+    document.getElementById("distance").innerHTML = "Distancee : " + distance;
   }
   for (i = 0; i < data.length - 1; i++) {
     flightPlanCoordinates.push({ lat: data[i].Latitude, lng: data[i].Longitude });
