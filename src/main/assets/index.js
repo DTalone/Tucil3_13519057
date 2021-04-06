@@ -28,17 +28,11 @@ function initRute() {
   const flightPlanCoordinates = [];
   distance = data[data.length - 1].Latitude;
   if (distance == 0) {
-    console.log("YAMAMAMAM")
-    var arrayy = ["1", "2", "3"];
-    var dist = document.getElementById("distance")
-    for (j = 0; j < arrayy.length; j++) {
-      dist.innerHTML += `<li>${arrayy[j]}</li>`
-    }
-    // document.getElementById("distance").innerHTML = `Tidak Ada apa Jalur</a>`;
+    document.getElementById("distance").innerHTML = "Tidak Ada apa Jalur";
     initMap();
     return
   } else {
-    document.getElementById("distance").innerHTML = "Distancee : " + distance;
+    document.getElementById("distance").innerHTML = "Distance : " + distance;
   }
   for (i = 0; i < data.length - 1; i++) {
     flightPlanCoordinates.push({ lat: data[i].Latitude, lng: data[i].Longitude });
