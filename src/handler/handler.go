@@ -5,13 +5,15 @@ import (
 	"html/template"
 	"net/http"
 	"path"
+
 	"example.com/graph"
 )
 
-// var graf = graph.ReadFile("tes1.txt")
+// menyimpan nama file secara global
 var fileName = "a"
 
 func Start() {
+	// definisi rute web
 	http.NewServeMux()
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/polyline", polyLineHandler)
@@ -19,72 +21,52 @@ func Start() {
 	http.HandleFunc("/Hello", helloHandler)
 	http.HandleFunc("/input", inputHandler)
 
+	// memfiksasi direktori sehingga dapat dipanggil file yang ada di dalamnya dengan /static/
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("assets"))))
 
 	fmt.Println("server started at localhost:8080")
+	// mengaktifkan server
 	http.ListenAndServe(":8080", nil)
 }
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-
+	// mengoper data ke method get
 	if r.Method == "POST" {
 		var filepath = path.Join("views", "index.html")
-        var tmpl = template.Must(template.New("result").ParseFiles(filepath))
+		var tmpl = template.Must(template.New("result").ParseFiles(filepath))
 
-        if err := r.ParseForm(); err != nil {
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-            return
-        }
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-        fileName = r.FormValue("fileName")
+		fileName = r.FormValue("fileName")
 		fmt.Println(fileName)
 		graf := graph.ReadFile(fileName)
 		nodes := graf.GetNodes()
 
-
-        if err := tmpl.Execute(w, nodes); err != nil {
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-        }
-        return
-    }
-
-
-
-
-	// fileName := "tes1.txt"
-	// graf := graph.ReadFile(fileName)
-	// nodes := graf.GetNodes()
-	
-
-	// var filepath = path.Join("views", "index.html")
-	// var tmpl, err = template.ParseFiles(filepath)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
-
-	// err = tmpl.Execute(w, nodes)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-	// }
+		if err := tmpl.Execute(w, nodes); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		return
+	}
 }
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("anajya ajnajnajibauhb"))
+	w.Write([]byte("Bukan Disini alamatnyaaaa! Disini : http://localhost:8080/"))
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-
+	// mendapatkan input nama file di html
 	if r.Method == "GET" {
 		var filepath = path.Join("views", "home.html")
-        var tmpl = template.Must(template.New("form").ParseFiles(filepath))
-        var err = tmpl.Execute(w, nil)
+		var tmpl = template.Must(template.New("form").ParseFiles(filepath))
+		var err = tmpl.Execute(w, nil)
 
-        if err != nil {
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-        }
-        return
-    }
-
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		return
+	}
 
 	var filepath = path.Join("views", "home.html")
 	var tmpl, err = template.ParseFiles(filepath)
@@ -101,20 +83,18 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "", http.StatusBadRequest)
 }
 
-
-func inputHandler(w http.ResponseWriter, r *http.Request){
+func inputHandler(w http.ResponseWriter, r *http.Request) {
+	// mendapatkan input node awal dan tujuan
 	if r.Method == "GET" {
-		fmt.Println("masuk sini")
 		var filepath = path.Join("views", "input.html")
-        var tmpl = template.Must(template.New("form").ParseFiles(filepath))
-        var err = tmpl.Execute(w, nil)
+		var tmpl = template.Must(template.New("form").ParseFiles(filepath))
+		var err = tmpl.Execute(w, nil)
 
-        if err != nil {
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-        }
-        return
-    }
-
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		return
+	}
 
 	var filepath = path.Join("views", "input.html")
 	var tmpl, err = template.ParseFiles(filepath)
@@ -131,41 +111,36 @@ func inputHandler(w http.ResponseWriter, r *http.Request){
 	http.Error(w, "", http.StatusBadRequest)
 }
 
-
-func polyLineHandler(w http.ResponseWriter, r *http.Request){
+func polyLineHandler(w http.ResponseWriter, r *http.Request) {
+	// mendapatkan input node awal dan tujuan
 	if r.Method == "POST" {
 		var filepath = path.Join("views", "polyline.html")
-        var tmpl = template.Must(template.New("result").ParseFiles(filepath))
+		var tmpl = template.Must(template.New("result").ParseFiles(filepath))
 
-        if err := r.ParseForm(); err != nil {
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-            return
-        }
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		// graf = graph.ReadFile("tes1.txt")
-        var simpulAwal = r.FormValue("simpulAwal")
+		var simpulAwal = r.FormValue("simpulAwal")
 		var simpulAkhir = r.FormValue("simpulAkhir")
 		fmt.Println(simpulAwal)
 
-		fmt.Println(fileName)
+		// mendefinisikan tipe graf
 		graf := graph.ReadFile(fileName)
 
-
-		fmt.Println("gan2")
+		// mendapatkan jarak dan rute
 		distance, rute := graf.Astar(simpulAwal, simpulAkhir)
-		fmt.Println("gan11")
+
+		fmt.Print("Jarak dari " + simpulAwal + " ke " + simpulAkhir + " :")
 		fmt.Println(distance)
 		ruteInfo := graf.GetNodeswithIndex(rute, distance)
 		fmt.Println(ruteInfo)
-		fmt.Println("gann")
-		// fmt.Println(fileName)
-		// graf := graph.ReadFile(fileName)
-		// nodes := graf.GetNodes()
 
-
-        if err := tmpl.Execute(w, ruteInfo); err != nil {
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-        }
-        return
-    }
-	fmt.Println("anjay")
+		// mengoper data ke dalam server
+		if err := tmpl.Execute(w, ruteInfo); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		return
+	}
 }
