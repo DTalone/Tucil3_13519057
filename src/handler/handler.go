@@ -86,9 +86,11 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 func inputHandler(w http.ResponseWriter, r *http.Request) {
 	// mendapatkan input node awal dan tujuan
 	if r.Method == "GET" {
+		graf := graph.ReadFile(fileName)
+		nodes := graf.GetNodes()
 		var filepath = path.Join("views", "input.html")
 		var tmpl = template.Must(template.New("form").ParseFiles(filepath))
-		var err = tmpl.Execute(w, nil)
+		var err = tmpl.Execute(w, nodes)
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -24,11 +24,20 @@ function initMap() {
   setMapOnAll(map);
 }
 
+function showOption() {
+  var nodeAwal = document.getElementById("idAwal");
+  var nodeAkhir = document.getElementById("idAkhir");
+  for (i = 0; i < data.length; i++) {
+    nodeAwal.innerHTML += `<option value="${data[i].Name}">"${data[i].Name}"</option>`
+    nodeAkhir.innerHTML += `<option value="${data[i].Name}">"${data[i].Name}"</option>`
+  }
+}
+
 function initRute() {
   const flightPlanCoordinates = [];
   distance = data[data.length - 1].Latitude;
   if (distance == 0) {
-    document.getElementById("distance").innerHTML = "Tidak Ada apa Jalur";
+    document.getElementById("distance").innerHTML = "Tidak Ada Jalur";
     initMap();
     return
   } else {
