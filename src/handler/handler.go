@@ -136,7 +136,7 @@ func polyLineHandler(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Print("Jarak dari " + simpulAwal + " ke " + simpulAkhir + " :")
 		fmt.Println(distance)
-		ruteInfo := graf.GetNodeswithIndex(rute, distance)
+		ruteInfo := graf.GetNodeswithName(rute, distance)
 		fmt.Println(ruteInfo)
 
 		// mengoper data ke dalam server

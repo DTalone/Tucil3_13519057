@@ -39,15 +39,29 @@ func (graf *Graph) GetNodes() []Info {
 }
 
 // mendapatkan nodes yang indexnya ada disebuah string visited
-func (graf *Graph) GetNodeswithIndex(visited string, distance float64) []Info {
+func (graf *Graph) GetNodeswithName(visited []string, distance float64) []Info {
 	answer := make([]Info, len(visited)+1)
 
 	for i := 0; i < len(visited); i++ {
-		idx, _ := strconv.Atoi(string(visited[i]))
-		answer[i] = graf.nodes[idx]
+		for j := 0; j < graf.totalNodes; j++ {
+			if visited[i] == graf.nodes[j].Name {
+				answer[i] = graf.nodes[j]
+				break
+			}
+		}
 	}
 	answer[len(visited)] = Info{distance, 0, "a"}
 	return answer
+}
+
+// mendapatkan index
+func (graf *Graph) GetIndex(search string) int {
+	for i := 0; i < graf.totalNodes; i++ {
+		if graf.nodes[i].Name == search {
+			return i
+		}
+	}
+	return 0
 }
 
 // mencari index dari 2 nodes di array nodes
@@ -97,7 +111,7 @@ type Item struct {
 	goal    string
 	gn      float64
 	fn      float64
-	visited string
+	visited []string
 	index   int
 }
 
@@ -223,57 +237,56 @@ func ReadFile(fileName string) *Graph {
 // A* Algorithm
 
 // cek apabila sudah pernah dikunjungi
-func isVisited(visited string, idx int) bool {
-	visitedInt, _ := strconv.Atoi(visited)
+func isVisited(visited []string, idx int, nodes []Info) bool {
 	for i := 0; i < len(visited); i++ {
-		if visitedInt%10 == idx {
+		if visited[i] == nodes[idx].Name {
 			return true
 		}
-		visitedInt /= 10
 	}
 	return false
 }
 
 //fungsi Astar
-func (graf *Graph) Astar(A string, B string) (float64, string) {
-	a, _ := Search(A, B, graf.nodes)
+func (graf *Graph) Astar(A string, B string) (float64, []string) {
 	pq := make(PriorityQueue, 1)
 	pq[0] = &Item{
 		current: A,
 		goal:    B,
 		gn:      0,
 		fn:      graf.GetDistance(A, B),
-		visited: strconv.Itoa(a),
+		visited: []string{A},
 		index:   0,
 	}
 	heap.Init(&pq)
-
 	// while pq is not empty
 	for pq.Len() > 0 {
 		now := heap.Pop(&pq).(*Item)
 		// apabila node sekarang == tujuan maka return
+		fmt.Println(now.visited)
+		fmt.Printf(now.current)
 		if now.current == now.goal {
 			return now.fn, now.visited
 		}
-		charac := string(now.visited[len(now.visited)-1])
-		a, _ = strconv.Atoi(charac)
+		a := graf.GetIndex(now.current)
+
 		// mengecek semua tetangga yang belum pernah dikunjungi
 		for i := 0; i < graf.totalNodes; i++ {
-			if graf.adjacencyMatrix[a][i] > 0 && !isVisited(now.visited, i) {
+			if graf.adjacencyMatrix[a][i] > 0 && !isVisited(now.visited, i, graf.nodes) {
 				updategn := now.gn + graf.adjacencyMatrix[a][i]
 				updatehn := graf.GetDistance(graf.nodes[i].Name, now.goal)
 				updatefn := updategn + updatehn
+				updatevisited := append(now.visited, graf.nodes[i].Name)
 				item := &Item{
 					current: graf.nodes[i].Name,
 					goal:    now.goal,
 					gn:      updategn,
 					fn:      updatefn,
-					visited: now.visited + strconv.Itoa(i),
+					visited: updatevisited,
 				}
 				heap.Push(&pq, item)
 			}
 		}
 
 	}
-	return 0., ""
+	return 0., []string{""}
 }
