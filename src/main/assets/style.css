@@ -17,6 +17,7 @@
         height: 100%;
         margin: 0;
         padding: 0;
+        background-image: url("background.jpg");
       }
       
       /* [END maps_marker_simple] */

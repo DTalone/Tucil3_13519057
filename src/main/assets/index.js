@@ -24,15 +24,6 @@ function initMap() {
   setMapOnAll(map);
 }
 
-function showOption() {
-  var nodeAwal = document.getElementById("idAwal");
-  var nodeAkhir = document.getElementById("idAkhir");
-  for (i = 0; i < data.length; i++) {
-    nodeAwal.innerHTML += `<option value="${data[i].Name}">"${data[i].Name}"</option>`
-    nodeAkhir.innerHTML += `<option value="${data[i].Name}">"${data[i].Name}"</option>`
-  }
-}
-
 function initRute() {
   const flightPlanCoordinates = [];
   distance = data[data.length - 1].Latitude;
@@ -41,7 +32,7 @@ function initRute() {
     initMap();
     return
   } else {
-    document.getElementById("distance").innerHTML = "Distance : " + distance;
+    document.getElementById("distance").innerHTML = "Jarak : " + distance + " KM";
   }
   for (i = 0; i < data.length - 1; i++) {
     flightPlanCoordinates.push({ lat: data[i].Latitude, lng: data[i].Longitude });
@@ -63,6 +54,16 @@ function initRute() {
     strokeWeight: 2,
   });
   flightPath.setMap(map);
+}
+
+// Show option for input page
+function showOption() {
+  var nodeAwal = document.getElementById("idAwal");
+  var nodeAkhir = document.getElementById("idAkhir");
+  for (i = 0; i < data.length; i++) {
+    nodeAwal.innerHTML += `<option value="${data[i].Name}">"${data[i].Name}"</option>`
+    nodeAkhir.innerHTML += `<option value="${data[i].Name}">"${data[i].Name}"</option>`
+  }
 }
 
 // Adds a marker to the map and push to the array.
