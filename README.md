@@ -24,12 +24,34 @@ Pada tugas kali ini, kami menggunakan bahasa go sebagai back end dan javascript 
 
 
 
-## How to Use
+## How to Use (Alternatif 1)
 1. Install Golang disini(https://golang.org/doc/install)
-2. Arahkan direktori kedalam folder proyek ini
-3. Buka folder bin
-4. Jalankan main.exe
-5. Program dapat dijalankan melalui http://localhost:8080/
+2. Buka terminal CMD atau terminal vscode
+3. Arahkan direktori kedalam folder proyek ini pada terminal cmd atau terminal vscode
+4. Arakan ke dalam folder src/main dengan mengetik cd src/main 
+5. ketik go run . 
+6. Terakhir program dapat dijalankan melalui http://localhost:8080/
+
+## How to Use (Alternatif 2)
+1. Install Golang disini(https://golang.org/doc/install)
+2. Buka terminal CMD atau terminal vscode
+3. Arahkan direktori kedalam folder proyek ini pada terminal cmd atau terminal vscode
+4. Arakan ke dalam folder src/main dengan mengetik cd src/main 
+5. ketik go build
+6. lalu ketik ./main atau main.exe 
+6. Terakhir program dapat dijalankan melalui http://localhost:8080/
+
+## Procedure how to Use GUI 
+1. Pada halaman pertama pilih test case yang tersedia dari tes case 1 hinggan tes case 6, lalu klik cari 
+2. Halaman akan berpindah ke halaman map
+3. klik cari rute untuk mencari jalur dari simpul awal ke simpul akhir(halaman akan berpindah ke halaman input)
+4. masukkan input simpul awal dan simpul akhir lalu klik cari, sehingga halaman akan pindah ke halaman polyline
+5. pada halaman polyline terdapa map yang menampilkan rute terpendek dari simpul awal dan simpul akhir 
+6. Tambahan pada halaman polyline dan halaman map, terdapat navbar yang memiliki spesifikasi sebagai berikut 
+    - klik mafiki akan pindah ke halaman root 
+    - klik Ganti test case akan pindah ke halaman root 
+    - klik cari rute akan pindah ke halaman input 
+    - klik manipulasi mark akan mendapatkan 3 pilihan yang bisa menampilkan, mennyembunyikan, dan menghapus mark.
 
 ## Author
 * 13519057 Kadek Dwi Bagus Ananta Udayana-Teknik Infotmatika-ITB
