@@ -12,7 +12,6 @@ import (
 )
 
 // GRAPH
-
 // Atribut Graph
 type Graph struct {
 	adjacencyMatrix [][]float64
@@ -24,6 +23,8 @@ type Graph struct {
 func (graf *Graph) GetTotalNodes() int {
 	return graf.totalNodes
 }
+
+// mendapatkan matriks ketetanggaan yang berisi jarak antara A dan B
 func (graf *Graph) GetDistance(A string, B string) float64 {
 	idx1, idx2 := Search(A, B, graf.nodes)
 	if idx1 == -1 || idx2 == -1 {
@@ -31,11 +32,15 @@ func (graf *Graph) GetDistance(A string, B string) float64 {
 	}
 	return graf.adjacencyMatrix[idx1][idx2]
 }
+
+// mendapatkan nodes yang ada
 func (graf *Graph) GetNodes() []Info {
 	return graf.nodes
 }
+
+// mendapatkan nodes yang indexnya ada disebuah string visited
 func (graf *Graph) GetNodeswithIndex(visited string, distance float64) []Info {
-	answer := make([]Info, len(visited) + 1)
+	answer := make([]Info, len(visited)+1)
 
 	for i := 0; i < len(visited); i++ {
 		idx, _ := strconv.Atoi(string(visited[i]))
@@ -44,6 +49,8 @@ func (graf *Graph) GetNodeswithIndex(visited string, distance float64) []Info {
 	answer[len(visited)] = Info{distance, 0, "a"}
 	return answer
 }
+
+// mencari index dari 2 nodes di array nodes
 func Search(A string, B string, nodes []Info) (int, int) {
 	idx1 := -1
 	idx2 := -1
@@ -66,7 +73,6 @@ func PrintListNodes(nodes []Info) {
 }
 
 // Info Nodes
-
 // Atribut Info
 type Info struct {
 	Latitude  float64
@@ -85,7 +91,7 @@ func (info Info) GetName() string {
 	return info.Name
 }
 
-// Item A*
+// Item yang membantu jalannya program A*
 type Item struct {
 	current string
 	goal    string
@@ -95,21 +101,25 @@ type Item struct {
 	index   int
 }
 
+// Mendefinisikan tipe data dari Item yang brnama PriorityQueue
 type PriorityQueue []*Item
 
+// Mendapatkan panjang array
 func (pq PriorityQueue) Len() int { return len(pq) }
 
+//membuat operasi perbandingan antar index dan mereturn true apabila fn lebih kecil
 func (pq PriorityQueue) Less(i, j int) bool {
-	// return the lowest
 	return pq[i].fn < pq[j].fn
 }
 
+// swap index
 func (pq PriorityQueue) Swap(i, j int) {
 	pq[i], pq[j] = pq[j], pq[i]
 	pq[i].index = i
 	pq[j].index = j
 }
 
+// memasukkan ke dalam array
 func (pq *PriorityQueue) Push(x interface{}) {
 	n := len(*pq)
 	item := x.(*Item)
@@ -117,6 +127,7 @@ func (pq *PriorityQueue) Push(x interface{}) {
 	*pq = append(*pq, item)
 }
 
+// menghapus data di dalam array object
 func (pq *PriorityQueue) Pop() interface{} {
 	old := *pq
 	n := len(old)
@@ -135,9 +146,12 @@ func Check(fileName string, e error) {
 }
 
 // Euclidan Distance
+// mengubah derajat ke radian
 func degreesToRadians(d float64) float64 {
 	return d * math.Pi / 180
 }
+
+// menggunakan haversine formula untuk mendapatkan euclidean distance
 func GetEuclidanDistance(A Info, B Info) float64 {
 	// Coordinate A in radians
 	latitude1 := degreesToRadians(A.Latitude)
@@ -198,6 +212,7 @@ func ReadFile(fileName string) *Graph {
 			} else {
 				a := graf.nodes[i]
 				b := graf.nodes[j]
+				// convert array to real euclidean distance
 				graf.adjacencyMatrix[i][j] = GetEuclidanDistance(a, b)
 			}
 		}
@@ -206,6 +221,8 @@ func ReadFile(fileName string) *Graph {
 }
 
 // A* Algorithm
+
+// cek apabila sudah pernah dikunjungi
 func isVisited(visited string, idx int) bool {
 	visitedInt, _ := strconv.Atoi(visited)
 	for i := 0; i < len(visited); i++ {
@@ -216,6 +233,8 @@ func isVisited(visited string, idx int) bool {
 	}
 	return false
 }
+
+//fungsi Astar
 func (graf *Graph) Astar(A string, B string) (float64, string) {
 	a, _ := Search(A, B, graf.nodes)
 	pq := make(PriorityQueue, 1)
@@ -232,11 +251,13 @@ func (graf *Graph) Astar(A string, B string) (float64, string) {
 	// while pq is not empty
 	for pq.Len() > 0 {
 		now := heap.Pop(&pq).(*Item)
+		// apabila node sekarang == tujuan maka return
 		if now.current == now.goal {
 			return now.fn, now.visited
 		}
 		charac := string(now.visited[len(now.visited)-1])
 		a, _ = strconv.Atoi(charac)
+		// mengecek semua tetangga yang belum pernah dikunjungi
 		for i := 0; i < graf.totalNodes; i++ {
 			if graf.adjacencyMatrix[a][i] > 0 && !isVisited(now.visited, i) {
 				updategn := now.gn + graf.adjacencyMatrix[a][i]
