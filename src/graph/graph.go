@@ -288,5 +288,5 @@ func (graf *Graph) Astar(A string, B string) (float64, []string) {
 		}
 
 	}
-	return 0., []string{""}
+	return 0., []string{A,B}
 }
