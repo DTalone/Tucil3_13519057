@@ -10,6 +10,5 @@ import (
 func main() {
 	fmt.Println("Hello, World!")
 	fmt.Println("Selamat datang di aplikasi MAP IKI?")
-	// memanggil fungsi yang berhubungan dengan server
 	handler.Start()
 }
