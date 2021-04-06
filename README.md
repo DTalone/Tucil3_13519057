@@ -25,9 +25,11 @@ Pada tugas kali ini, kami menggunakan bahasa go sebagai back end dan javascript 
 
 
 ## How to Use
-1. 
-
-
+1. Install Golang disini(https://golang.org/doc/install)
+2. Arahkan direktori kedalam folder proyek ini
+3. Buka folder bin
+4. Jalankan main.exe
+5. Program dapat dijalankan melalui http://localhost:8080/
 
 ## Author
 * 13519057 Kadek Dwi Bagus Ananta Udayana-Teknik Infotmatika-ITB
